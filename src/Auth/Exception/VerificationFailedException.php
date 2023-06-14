@@ -4,6 +4,6 @@ namespace Azimo\Apple\Auth\Exception;
 
 use InvalidArgumentException;
 
-final class VerificationFailedException extends InvalidArgumentException implements AppleExceptionInterface
+class VerificationFailedException extends InvalidArgumentException implements AppleExceptionInterface
 {
 }

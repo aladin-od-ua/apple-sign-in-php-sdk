@@ -2,47 +2,75 @@
 
 namespace Azimo\Apple\Auth\Struct;
 
-use DateTimeInterface;
-
-final class JwtPayload
+class JwtPayload
 {
-    private string $iss;
+    /**
+     * @var string
+     */
+    private $iss;
 
-    private array $aud;
+    /**
+     * @var string
+     */
+    private $aud;
 
-    private DateTimeInterface $exp;
+    /**
+     * @var int
+     */
+    private $exp;
 
-    private DateTimeInterface $iat;
+    /**
+     * @var int
+     */
+    private $iat;
 
-    private string $sub;
+    /**
+     * @var string
+     */
+    private $sub;
 
-    private string $cHash;
+    /**
+     * @var string
+     */
+    private $cHash;
 
-    private string $email;
+    /**
+     * @var string
+     */
+    private $email;
 
-    private bool $emailVerified;
+    /**
+     * @var bool
+     */
+    private $emailVerified;
 
-    private bool $isPrivateEmail;
+    /**
+     * @var bool
+     */
+    private $isPrivateEmail;
 
-    private int $authTime;
+    /**
+     * @var int
+     */
+    private $authTime;
 
-    private ?string $nonce;
-
-    private bool $nonceSupported;
+    /**
+     * @var bool
+     */
+    private $nonceSupported;
 
     public function __construct(
         string $iss,
-        array $aud,
-        DateTimeInterface $exp,
-        DateTimeInterface $iat,
+        string $aud,
+        int $exp,
+        int $iat,
         string $sub,
         string $cHash,
         string $email,
         bool $emailVerified,
         bool $isPrivateEmail,
         int $authTime,
-        bool $nonceSupported,
-        ?string $nonce
+        bool $nonceSupported
     ) {
         $this->iss = $iss;
         $this->aud = $aud;
@@ -55,7 +83,6 @@ final class JwtPayload
         $this->isPrivateEmail = $isPrivateEmail;
         $this->authTime = $authTime;
         $this->nonceSupported = $nonceSupported;
-        $this->nonce = $nonce;
     }
 
     public function getIss(): string
@@ -63,17 +90,17 @@ final class JwtPayload
         return $this->iss;
     }
 
-    public function getAud(): array
+    public function getAud(): string
     {
         return $this->aud;
     }
 
-    public function getExp(): DateTimeInterface
+    public function getExp(): int
     {
         return $this->exp;
     }
 
-    public function getIat(): DateTimeInterface
+    public function getIat(): int
     {
         return $this->iat;
     }
@@ -106,11 +133,6 @@ final class JwtPayload
     public function getAuthTime(): int
     {
         return $this->authTime;
-    }
-
-    public function getNonce(): ?string
-    {
-        return $this->nonce;
     }
 
     public function isNonceSupported(): bool

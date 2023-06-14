@@ -4,6 +4,6 @@ namespace Azimo\Apple\Api\Exception;
 
 use InvalidArgumentException;
 
-final class ResponseValidationException extends InvalidArgumentException implements AppleApiExceptionInterface
+class ResponseValidationException extends InvalidArgumentException implements AppleApiExceptionInterface
 {
 }

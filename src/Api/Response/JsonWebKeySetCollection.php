@@ -10,11 +10,16 @@ class JsonWebKeySetCollection
     /**
      * @var JsonWebKeySet[]
      */
-    private array $authKeys;
+    private $authKeys;
 
     public function __construct(array $authKeys)
     {
         $this->authKeys = $authKeys;
+    }
+
+    public function getAuthKeys(): array
+    {
+        return $this->authKeys;
     }
 
     public function getByCryptographicAlgorithm(string $algorithm): ?JsonWebKeySet

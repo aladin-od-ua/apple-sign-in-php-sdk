@@ -4,6 +4,6 @@ namespace Azimo\Apple\Auth\Exception;
 
 use RuntimeException;
 
-final class KeysFetchingFailedException extends RuntimeException implements AppleExceptionInterface
+class KeysFetchingFailedException extends RuntimeException implements AppleExceptionInterface
 {
 }

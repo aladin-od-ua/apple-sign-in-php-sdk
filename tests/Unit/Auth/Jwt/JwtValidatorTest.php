@@ -3,40 +3,46 @@
 namespace Azimo\Apple\Tests\Unit\Auth\Jwt;
 
 use Azimo\Apple\Auth\Jwt\JwtValidator;
-use DateTimeImmutable;
 use Lcobucci\JWT;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
-final class JwtValidatorTest extends MockeryTestCase
+class JwtValidatorTest extends MockeryTestCase
 {
-    private JWT\Token $jwtMock;
+    /**
+     * @var JWT\ValidationData|Mockery\MockInterface
+     */
+    private $validationDataMock;
 
-    private array $constraints;
+    /**
+     * @var JWT\Token|Mockery\MockInterface
+     */
+    private $jwtMock;
 
-    private JWT\Validator $validatorMock;
-
-    private JwtValidator $jwtValidator;
+    /**
+     * @var JwtValidator
+     */
+    private $jwtValidator;
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->validationDataMock = Mockery::mock(JWT\ValidationData::class);
         $this->jwtMock = Mockery::mock(JWT\Token::class);
-        $this->constraints = [];
-        $this->validatorMock = Mockery::mock(JWT\Validator::class);
-        $this->jwtValidator = new JwtValidator($this->validatorMock, $this->constraints);
+
+        $this->jwtValidator = new JwtValidator($this->validationDataMock);
     }
 
     public function testIfIsValidReturnsTrueWhenTokenDataAreValidAndTokenIsNotExpired(): void
     {
-        $this->validatorMock->shouldReceive('validate')
+        $this->jwtMock->shouldReceive('validate')
             ->once()
-            ->with($this->jwtMock, ...$this->constraints)
+            ->with($this->validationDataMock)
             ->andReturn(true);
         $this->jwtMock->shouldReceive('isExpired')
             ->once()
-            ->with(DateTimeImmutable::class)
+            ->withNoArgs()
             ->andReturn(false);
 
         self::assertTrue($this->jwtValidator->isValid($this->jwtMock));
@@ -44,13 +50,13 @@ final class JwtValidatorTest extends MockeryTestCase
 
     public function testIfIsValidReturnsFalseWhenTokenDataAreValidAndTokenIsExpired(): void
     {
-        $this->validatorMock->shouldReceive('validate')
+        $this->jwtMock->shouldReceive('validate')
             ->once()
-            ->with($this->jwtMock, ...$this->constraints)
+            ->with($this->validationDataMock)
             ->andReturn(true);
         $this->jwtMock->shouldReceive('isExpired')
             ->once()
-            ->with(DateTimeImmutable::class)
+            ->withNoArgs()
             ->andReturn(true);
 
         self::assertFalse($this->jwtValidator->isValid($this->jwtMock));
@@ -58,9 +64,9 @@ final class JwtValidatorTest extends MockeryTestCase
 
     public function testIfIsValidReturnsFalseWhenTokenDataAreInvalidValidAndTokenIsNotExpired(): void
     {
-        $this->validatorMock->shouldReceive('validate')
+        $this->jwtMock->shouldReceive('validate')
             ->once()
-            ->with($this->jwtMock, ...$this->constraints)
+            ->with($this->validationDataMock)
             ->andReturn(false);
         $this->jwtMock->shouldNotReceive('isExpired');
 

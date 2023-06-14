@@ -4,6 +4,6 @@ namespace Azimo\Apple\Auth\Exception;
 
 use OutOfBoundsException;
 
-final class MissingClaimException extends OutOfBoundsException implements AppleExceptionInterface
+class MissingClaimException extends OutOfBoundsException implements AppleExceptionInterface
 {
 }

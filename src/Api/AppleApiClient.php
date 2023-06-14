@@ -5,13 +5,18 @@ namespace Azimo\Apple\Api;
 use Azimo\Apple\Api\Exception\PublicKeyFetchingFailedException;
 use Azimo\Apple\Api\Factory\ResponseFactory;
 use GuzzleHttp;
-use InvalidArgumentException;
 
-final class AppleApiClient implements AppleApiClientInterface
+class AppleApiClient
 {
-    private GuzzleHttp\ClientInterface $httpClient;
+    /**
+     * @var GuzzleHttp\ClientInterface
+     */
+    private $httpClient;
 
-    private ResponseFactory $responseFactory;
+    /**
+     * @var ResponseFactory
+     */
+    private $responseFactory;
 
     public function __construct(GuzzleHttp\ClientInterface $httpClient, ResponseFactory $responseFactory)
     {
@@ -29,9 +34,9 @@ final class AppleApiClient implements AppleApiClientInterface
 
         try {
             return $this->responseFactory->createFromArray(
-                Utils::jsonDecode($response->getBody()->getContents(), true)
+                GuzzleHttp\json_decode($response->getBody()->getContents(), true)
             );
-        } catch (InvalidArgumentException $exception) {
+        } catch (\InvalidArgumentException $exception) {
             throw new Exception\InvalidResponseException(
                 'Unable to decode response',
                 $exception->getCode(),

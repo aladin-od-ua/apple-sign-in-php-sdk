@@ -1,5 +1,6 @@
 # Sign-in with Apple SDK
 
+[![Latest Version](https://img.shields.io/github/v/release/AzimoLabs/apple-sign-in-php-sdk.svg?style=flat-square)](https://github.com/AzimoLabs/apple-sign-in-php-sdk/releases)
 [![Build Status](https://img.shields.io/github/workflow/status/AzimoLabs/apple-sign-in-php-sdk/CI?label=ci%20build&style=flat-square)](https://github.com/AzimoLabs/apple-sign-in-php-sdk/actions?query=workflow%3ACI)
 
 ## Installation
@@ -17,9 +18,7 @@ Recommended and easiest way to installing library is through [Composer](https://
 |PHP version|Library version|
 |---|---|
 |`5.x`|`NOT SUPPORTED`|
-| `> 7.0 <= 7.3`| `1.4.x` |
-| `> 7.4 < 8.0`| `1.5.x` |
-| `> 8.0 & ^7.4`| `2.0.x` |
+| `> 7.0 <= 7.3`| `1.x.x` |
 
 ## How it works
 
@@ -47,7 +46,7 @@ $validationData->setIssuer('https://appleid.apple.com');
 $validationData->setAudience('com.azimo');
 
 $appleJwtFetchingService = new Auth\Service\AppleJwtFetchingService(
-            new Auth\Jwt\JwtParser(new \Lcobucci\JWT\Token\Parser(new \Lcobucci\JWT\Encoding\JoseEncoder())),
+            new Auth\Jwt\JwtParser(new Parser()),
             new Auth\Jwt\JwtVerifier(
                 new Api\AppleApiClient(
                     new GuzzleHttp\Client(
@@ -59,16 +58,9 @@ $appleJwtFetchingService = new Auth\Service\AppleJwtFetchingService(
                     ),
                     new Api\Factory\ResponseFactory()
                 ),
-                new \Lcobucci\JWT\Validation\Validator(),
                 new \Lcobucci\JWT\Signer\Rsa\Sha256()
             ),
-            new Auth\Jwt\JwtValidator(
-                new \Lcobucci\JWT\Validation\Validator(),
-                [
-                    new \Lcobucci\JWT\Validation\Constraint\IssuedBy('https://appleid.apple.com'),
-                    new \Lcobucci\JWT\Validation\Constraint\PermittedFor('com.c.azimo.stage'),
-                ]
-            ),
+            new Auth\Jwt\JwtValidator($validationData),
             new Auth\Factory\AppleJwtStructFactory()
         );
 
@@ -97,11 +89,11 @@ OK (1 test, 1 assertion)
 It is welcome to open a pull request with a fix of any issue:
 
 - [x] Upgrade `phpseclib/phpseclib` to version `3.0.7`
-- [x] Upgrade `lcobucci/jwt` to version `4.x`. Reported
+- [ ] Upgrade `lcobucci/jwt` to version `4.x`. Reported
   in: [Implicit conversion of keys from strings is deprecated. #2](https://github.com/AzimoLabs/apple-sign-in-php-sdk/issues/2)
 - [x] Make library compatible with PHP `7.4.3`. Reported
   in [Uncaught JsonException: Malformed UTF-8 characters](https://github.com/AzimoLabs/apple-sign-in-php-sdk/issues/4)
-- [x] Make library compatible with PHP `8.0.0`
+- [ ] Make library compatible with PHP `8.0.0`
 
 ## Miscellaneous
 

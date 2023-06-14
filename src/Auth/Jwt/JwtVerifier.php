@@ -2,43 +2,47 @@
 
 namespace Azimo\Apple\Auth\Jwt;
 
-use Azimo\Apple\Api\AppleApiClientInterface;
+use Azimo\Apple\Api\AppleApiClient;
 use Azimo\Apple\Api\Exception as ApiException;
 use Azimo\Apple\Api\Response\JsonWebKeySet;
 use Azimo\Apple\Auth\Exception;
+use BadMethodCallException;
 use Lcobucci\JWT;
 use OutOfBoundsException;
-use phpseclib3\Crypt\RSA;
-use phpseclib3\Math\BigInteger;
+
+include 'Crypt/RSA.php';
+include 'Math/BigInteger.php';
 
 class JwtVerifier
 {
-    private AppleApiClientInterface $client;
+    /**
+     * @var AppleApiClient
+     */
+    private $client;
 
-    private JWT\Signer $signer;
+    /**
+     * @var JWT\Signer
+     */
+    private $signer;
 
-    private JWT\Validator $validator;
-
-    public function __construct(AppleApiClientInterface $client, JWT\Validator $validator, JWT\Signer $signer)
+    public function __construct(AppleApiClient $client, JWT\Signer $signer)
     {
         $this->client = $client;
         $this->signer = $signer;
-        $this->validator = $validator;
     }
 
     /**
      * @throws Exception\InvalidCryptographicAlgorithmException
      * @throws Exception\KeysFetchingFailedException
+     * @throws Exception\NotSignedTokenException
      */
     public function verify(JWT\Token $jwt): bool
     {
-        return $this->validator->validate(
-            $jwt,
-            new JWT\Validation\Constraint\SignedWith(
-                $this->signer,
-                JWT\Signer\Key\InMemory::plainText($this->createPublicKey($this->getAuthKey($jwt)))
-            )
-        );
+        try {
+            return $jwt->verify($this->signer, $this->createPublicKey($this->getAuthKey($jwt)));
+        } catch (BadMethodCallException $exception) {
+            throw  new Exception\NotSignedTokenException($exception->getMessage(), $exception->getCode(), $exception);
+        }
     }
 
     /**
@@ -58,7 +62,7 @@ class JwtVerifier
         }
 
         try {
-            $cryptographicAlgorithm = $jwt->headers()->get('kid');
+            $cryptographicAlgorithm = $jwt->getHeader('kid');
             $authKey = $authKeys->getByCryptographicAlgorithm($cryptographicAlgorithm);
         } catch (OutOfBoundsException | ApiException\UnsupportedCryptographicAlgorithmException $exception) {
             throw new Exception\InvalidCryptographicAlgorithmException(
@@ -79,9 +83,14 @@ class JwtVerifier
 
     private function createPublicKey(JsonWebKeySet $authKey): string
     {
-        return RSA\Formats\Keys\PKCS8::savePublicKey(
-            new BigInteger(base64_decode(strtr($authKey->getModulus(), '-_', '+/')), 256),
-            new BigInteger(base64_decode(strtr($authKey->getExponent(), '-_', '+/')), 256)
+        $method = new \ReflectionMethod(\Crypt_RSA::class, "_convertPublicKey");
+        $method->setAccessible(true);
+
+        $rsa = new \Crypt_RSA();
+
+        return $rsa->_convertPublicKey(
+            new \Math_BigInteger(base64_decode(strtr($authKey->getModulus(), '-_', '+/')), 256),
+            new \Math_BigInteger(base64_decode(strtr($authKey->getExponent(), '-_', '+/')), 256)
         );
     }
 }

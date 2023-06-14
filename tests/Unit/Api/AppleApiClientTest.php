@@ -9,13 +9,22 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Psr\Http\Message\RequestInterface;
 
-final class AppleApiClientTest extends MockeryTestCase
+class AppleApiClientTest extends MockeryTestCase
 {
-    private Api\AppleApiClient $client;
+    /**
+     * @var Api\AppleApiClient
+     */
+    private $client;
 
-    private GuzzleHttp\Client $httpClientMock;
+    /**
+     * @var GuzzleHttp\Client|\Mockery\MockInterface
+     */
+    private $httpClientMock;
 
-    private Api\Factory\ResponseFactory $responseFactoryMock;
+    /**
+     * @var Api\Factory\ResponseFactory|\Mockery\MockInterface
+     */
+    private $responseFactoryMock;
 
     protected function setUp(): void
     {

@@ -2,7 +2,7 @@
 
 namespace Azimo\Apple\Api\Enum;
 
-final class CryptographicAlgorithmEnum
+class CryptographicAlgorithmEnum
 {
     public const KID_86D88KF = '86D88Kf';
 

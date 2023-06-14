@@ -6,33 +6,45 @@ class JsonWebKeySet
 {
     /**
      * The family of cryptographic algorithms used with the key.
+     *
+     * @var string
      */
-    private string $kty;
+    private $kty;
 
     /**
      * The unique identifier for the key.
+     *
+     * @var string
      */
-    private string $kid;
+    private $kid;
 
     /**
      * How the key was meant to be used; `sig` represents the signature.
+     *
+     * @var string
      */
-    private string $use;
+    private $use;
 
     /**
      * The specific cryptographic algorithm used with the key.
+     *
+     * @var string
      */
-    private string $alg;
+    private $alg;
 
     /**
      * The modulus for the RSA public key.
+     *
+     * @var string
      */
-    private string $modulus;
+    private $modulus;
 
     /**
      * The exponent for the RSA public key.
+     *
+     * @var string
      */
-    private string $exponent;
+    private $exponent;
 
     public function __construct(string $kty, string $kid, string $use, string $alg, string $modulus, string $exponent)
     {

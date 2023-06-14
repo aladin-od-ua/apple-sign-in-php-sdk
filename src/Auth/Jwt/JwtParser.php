@@ -9,7 +9,10 @@ use RuntimeException;
 
 class JwtParser
 {
-    private JWT\Parser $jwtParser;
+    /**
+     * @var JWT\Parser
+     */
+    private $jwtParser;
 
     public function __construct(JWT\Parser $jwtParser)
     {

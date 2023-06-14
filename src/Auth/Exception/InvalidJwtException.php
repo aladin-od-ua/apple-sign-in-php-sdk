@@ -4,6 +4,6 @@ namespace Azimo\Apple\Auth\Exception;
 
 use InvalidArgumentException;
 
-final class InvalidJwtException extends InvalidArgumentException implements AppleExceptionInterface
+class InvalidJwtException extends InvalidArgumentException implements AppleExceptionInterface
 {
 }
